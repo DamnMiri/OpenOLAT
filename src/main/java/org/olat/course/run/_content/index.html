@@ -19,6 +19,135 @@ function o_activateCourseTool(toolname) {
 }
 /* ]]> */ 
 </script>
+
+<div id="sugg_info_div" class="o_info">
+<div style="display:flex;flex-direction:row;margin-bottom:10px"">
+<h2 style="flex-grow:3;margin-bottom:0px;margin-top:0px">
+Simili
+</h2>
+<button style="flex-grow:1" onclick="mode(1)">
+Singolo
+</button>
+<button style="flex-grow:1" onclick="mode(2)">
+Tutti
+</button>
+</div>
+	<div class="o_catalog container-fluid" id="div1">
+		<div class="o_sublevels row clearfix" style="margin-bottom:0px">
+			<div id="sugg_div">
+
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="res" style="display:none">
+
+	<div id="sugg_res" class="o_sublevel" style="margin-bottom:5px">
+		<div class="" style="height:40px;">
+			<a>
+				<div class="o_meta" style="border:none;border-bottom:3px solid green"><h4 class="o_title" style="user-select:none;word-break: break-all;font-size: 16px"></h4></div>
+			</a>
+			</div>
+	</div>
+	
+	<div id="next_res" class="o_sublevel" style="margin-bottom:5px;">
+		<div class="" style="height:40px;">
+			<a onclick="nextSugg()">	
+				<div class="o_meta" style="border:none;border-bottom:3px solid orangered"><h4 style="cursor:pointer;user-select:none;font-size: 16px" class="o_title">Prossimo <i class="o_icon o_icon_start" style="color:orangered"></i></h4></div>
+			</a>
+		</div>
+	</div>
+	
+</div>
+
+<script>
+var show_s = 0;
+var current_mode = 1;
+var suggs = [];
+var sugg_div = document.getElementById("sugg_div");
+var sugg_res = document.getElementById("sugg_res");
+var next_res = document.getElementById("next_res");
+var sugg_info_div = document.getElementById("sugg_info_div");
+
+var obj ={
+	#foreach($sugg in $subCategories)
+	$sugg.getResid() : {
+		'parentId' : $sugg.getParentId(),
+		'name' : '$sugg.getName()',
+		#if($sugg.newSugg().equals("new"))
+			'color' : 'green',
+		#else
+			'color' : 'orangered',
+		#end
+	},
+	#end
+};
+
+mode(current_mode);
+
+function mode(mode_id)
+{
+	suggs=[];
+	current_mode = mode_id;
+	var sugg_div_new = sugg_div.cloneNode(false);
+	sugg_div.parentNode.replaceChild(sugg_div_new, sugg_div);
+	sugg_div = sugg_div_new;
+	
+		if(Object.keys(obj).length === 0)
+		{
+			sugg_info_div.style.display = "none";
+		}
+		else
+		{
+			sugg_info_div.style.display = "";
+			Object.keys(obj).forEach(function(key) {
+				let el = sugg_res.cloneNode(true);
+				el.id="sugg_"+key;
+				el.classList.add("sugg");
+				el.getElementsByTagName("a")[0].href="/olat/auth/RepositoryEntry/"+obj[key].parentId+"/CourseNode/"+key;
+				el.getElementsByTagName("h4")[0].textContent=obj[key].name;
+				el.getElementsByTagName("div")[1].style.borderBottom = "3px solid "+obj[key].color;
+				suggs.push(el);
+				sugg_div.appendChild(el);
+			});
+			
+			if(mode_id == 1)
+				{
+					for(var i=0;i<suggs.length;i++)
+					{
+						if (i == show_s) {
+							suggs[i].style.display="relative";
+						}
+						else suggs[i].style.display="none";
+					}
+					
+					let el = next_res.cloneNode(true);
+					el.id="";
+					sugg_div.appendChild(el);
+				}
+		}
+
+}
+
+
+function nextSugg()
+{
+
+	show_s++;
+	if(show_s == suggs.length) show_s =0;
+	for(var i=0;i<suggs.length;i++)
+	{
+		if (i == show_s) {
+			suggs[i].style.display="";
+		}
+		else suggs[i].style.display="none";
+	}
+
+}
+</script>
+
 #if($r.available("courseProgress"))
 <div class="o_course_progress container-fluid">
 	$r.render("courseProgress")

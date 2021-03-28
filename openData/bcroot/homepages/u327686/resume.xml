@@ -1,0 +1,88 @@
+<org.olat.core.id.context.HistoryPointImpl>
+  <uuid>252</uuid>
+  <businessPath>[RepositoryEntry:1703941][CourseNode:103253521559580]</businessPath>
+  <entries>
+    <org.olat.core.id.context.MyContextEntry>
+      <olatResourceable class="org.olat.repository.RepositoryEntry">
+        <key>1703941</key>
+        <version>19</version>
+        <creationDate class="sql-timestamp">2021-02-14 21:23:19</creationDate>
+        <lastModified class="sql-timestamp">2021-03-16 00:13:48</lastModified>
+        <softkey>myopenolat_1_103253521558908</softkey>
+        <olatResource class="org.olat.resource.OLATResourceImpl">
+          <key>1572873</key>
+          <version>0</version>
+          <creationDate class="sql-timestamp">2021-02-14 21:23:19</creationDate>
+          <resName>CourseModule</resName>
+          <resId>103253521558907</resId>
+        </olatResource>
+        <groups class="org.hibernate.collection.internal.PersistentSet">
+          <isTempSession>false</isTempSession>
+          <initialized>false</initialized>
+          <owner class="org.olat.repository.RepositoryEntry" reference="../.."/>
+          <cachedSize>-1</cachedSize>
+          <role>org.olat.repository.RepositoryEntry.groups</role>
+          <key class="long">1703941</key>
+          <dirty>false</dirty>
+          <elementRemoved>false</elementRemoved>
+          <allowLoadOutsideTransaction>false</allowLoadOutsideTransaction>
+        </groups>
+        <organisations class="org.hibernate.collection.internal.PersistentSet">
+          <isTempSession>false</isTempSession>
+          <initialized>false</initialized>
+          <owner class="org.olat.repository.RepositoryEntry" reference="../.."/>
+          <cachedSize>-1</cachedSize>
+          <role>org.olat.repository.RepositoryEntry.organisations</role>
+          <key class="long">1703941</key>
+          <dirty>false</dirty>
+          <elementRemoved>false</elementRemoved>
+          <allowLoadOutsideTransaction>false</allowLoadOutsideTransaction>
+        </organisations>
+        <taxonomyLevels class="org.hibernate.collection.internal.PersistentSet">
+          <isTempSession>false</isTempSession>
+          <initialized>false</initialized>
+          <owner class="org.olat.repository.RepositoryEntry" reference="../.."/>
+          <cachedSize>-1</cachedSize>
+          <role>org.olat.repository.RepositoryEntry.taxonomyLevels</role>
+          <key class="long">1703941</key>
+          <dirty>false</dirty>
+          <elementRemoved>false</elementRemoved>
+          <allowLoadOutsideTransaction>false</allowLoadOutsideTransaction>
+        </taxonomyLevels>
+        <technicalType>learningpath</technicalType>
+        <resourcename>-</resourcename>
+        <displayname>Farmacologia</displayname>
+        <description></description>
+        <initialAuthor>u327681</initialAuthor>
+        <objectives>&lt;p&gt;#wow&lt;/p&gt;</objectives>
+        <requirements></requirements>
+        <credits></credits>
+        <externalRef></externalRef>
+        <statistics>
+          <key>1605637</key>
+          <creationDate class="sql-timestamp">2021-02-14 21:23:19</creationDate>
+          <lastModified class="sql-timestamp">2021-02-14 21:23:19</lastModified>
+          <numOfRatings>0</numOfRatings>
+          <numOfComments>0</numOfComments>
+          <launchCounter>36</launchCounter>
+          <downloadCounter>0</downloadCounter>
+          <lastUsage class="sql-timestamp">2021-03-16 03:44:10</lastUsage>
+        </statistics>
+        <status>published</status>
+        <allUsers>false</allUsers>
+        <guests>false</guests>
+        <bookable>true</bookable>
+        <canCopy>false</canCopy>
+        <canReference>false</canReference>
+        <canDownload>false</canDownload>
+        <allowToLeave>atAnyTime</allowToLeave>
+      </olatResourceable>
+    </org.olat.core.id.context.MyContextEntry>
+    <org.olat.core.id.context.MyContextEntry>
+      <olatResourceable class="org.olat.core.util.resource.Resourceable">
+        <resourceableTypeName>CourseNode</resourceableTypeName>
+        <resourceableId>103253521559580</resourceableId>
+      </olatResourceable>
+    </org.olat.core.id.context.MyContextEntry>
+  </entries>
+</org.olat.core.id.context.HistoryPointImpl>

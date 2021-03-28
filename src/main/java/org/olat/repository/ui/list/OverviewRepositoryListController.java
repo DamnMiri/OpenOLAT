@@ -19,8 +19,20 @@
  */
 package org.olat.repository.ui.list;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.Collator;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.jpl7.Query;
+import org.jpl7.Term;
+import org.olat.core.CoreSpringFactory;
+import org.olat.core.dispatcher.mapper.MapperService;
+import org.olat.core.dispatcher.mapper.manager.MapperKey;
 import org.olat.core.gui.UserRequest;
 import org.olat.core.gui.components.Component;
 import org.olat.core.gui.components.link.Link;
@@ -37,14 +49,17 @@ import org.olat.core.gui.control.WindowControl;
 import org.olat.core.gui.control.controller.BasicController;
 import org.olat.core.gui.control.generic.dtabs.Activateable2;
 import org.olat.core.id.OLATResourceable;
+import org.olat.core.id.User;
 import org.olat.core.id.context.BusinessControlFactory;
 import org.olat.core.id.context.ContextEntry;
 import org.olat.core.id.context.StateEntry;
 import org.olat.core.logging.activity.ThreadLocalUserActivityLogger;
+import org.olat.core.util.StringHelper;
 import org.olat.core.util.Util;
 import org.olat.core.util.event.EventBus;
 import org.olat.core.util.event.GenericEventListener;
 import org.olat.core.util.resource.OresHelper;
+import org.olat.core.util.vfs.VFSLeaf;
 import org.olat.modules.curriculum.CurriculumModule;
 import org.olat.modules.curriculum.CurriculumService;
 import org.olat.modules.curriculum.ui.CurriculumListController;
@@ -53,13 +68,19 @@ import org.olat.repository.RepositoryEntryStatusEnum;
 import org.olat.repository.RepositoryManager;
 import org.olat.repository.RepositoryModule;
 import org.olat.repository.RepositoryService;
+import org.olat.repository.CatalogEntry.Style;
 import org.olat.repository.controllers.EntryChangedEvent;
 import org.olat.repository.controllers.EntryChangedEvent.Change;
 import org.olat.repository.manager.CatalogManager;
 import org.olat.repository.model.SearchMyRepositoryEntryViewParams;
+import org.olat.repository.ui.CatalogEntryImageMapper;
 import org.olat.repository.ui.catalog.CatalogNodeController;
 import org.olat.util.logging.activity.LoggingResourceable;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import ai.core.PrologEngine;
+import ai.core.Suggerimento;
+import ai.core.PrologQuery;
 
 /**
  * 
@@ -111,14 +132,64 @@ public class OverviewRepositoryListController extends BasicController implements
 	
 	public OverviewRepositoryListController(UserRequest ureq, WindowControl wControl) {
 		super(ureq, wControl);
+
 		setTranslator(Util.createPackageTranslator(RepositoryManager.class, getLocale(), getTranslator()));
 		isGuestOnly = ureq.getUserSession().getRoles().isGuestOnly();
 
 		MainPanel mainPanel = new MainPanel("myCoursesMainPanel");
 		mainPanel.setDomReplaceable(false);
 		mainPanel.setCssClass("o_sel_my_repository_entries");
+
 		mainVC = createVelocityContainer("overview");
+		int numero_minimo_suggerimenti = 5;
+		String username =	ureq.getUserSession().getIdentity().getUser().getNickName();
+		
+		try {
+		System.out.println("Suggest Init");
+		Map<String, Term>[] map = PrologQuery.SuggestMostVisited(username);
+
+		List<Suggerimento> subCategories = new ArrayList<>();
+        for (Map<String, Term> stringTermMap : map) {
+        	String lo = PrologEngine.ToJavaString(stringTermMap.get("X").toString());
+        	Suggerimento sg = new Suggerimento();
+        	sg.setName(lo);
+        	sg.setResid(PrologQuery.getLOId(lo));
+        	String courseName = PrologQuery.getLOCourse(lo);
+        	sg.setParentName(courseName);
+        	sg.setParentId(PrologQuery.getCourseId(courseName));
+        	sg.setNewSugg("new");
+        	subCategories.add(sg);
+        }
+		System.out.println("Suggest END");
+		
+		if (subCategories.size() < numero_minimo_suggerimenti){
+	    	map = PrologQuery.SuggestMostVisitedRepeat(username);
+	    	int i =0;
+	    	if(map.length >0)
+	    	{
+		    	while(subCategories.size() < numero_minimo_suggerimenti)
+		    	{
+		    		String lo = PrologEngine.ToJavaString(map[i++].get("X").toString());
+		        	Suggerimento sg = new Suggerimento();
+		        	sg.setName(lo);
+		        	sg.setResid(PrologQuery.getLOId(lo));
+		        	String courseName = PrologQuery.getLOCourse(lo);
+		        	sg.setParentName(courseName);
+		        	sg.setParentId(PrologQuery.getCourseId(courseName));
+		        	sg.setNewSugg("repeat");
+		        	subCategories.add(sg);
+		    	}
+	    	}
+		}
+		
+		mainVC.contextPut("subCategories", subCategories);
 		mainPanel.setContent(mainVC);
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		segmentView = SegmentViewFactory.createSegmentView("segments", mainVC, this);
 		segmentView.setReselect(true);

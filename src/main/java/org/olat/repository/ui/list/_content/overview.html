@@ -1,3 +1,99 @@
+#if($subCategories.size() != 0)	
+<div class="o_info">
+<div style="display:flex;flex-direction:row;margin-bottom:10px"">
+<h2 style="flex-grow:3;margin-bottom:0px">
+Suggerimenti per Te
+</h2>
+<button style="flex-grow:1" onclick="changeMode(1)">
+Singolo
+</button>
+<button style="flex-grow:1" onclick="changeMode(2)">
+Tutti
+</button>
+</div>
+	<div class="o_catalog container-fluid" id="div1">
+		<div class="o_sublevels row clearfix" style="margin-bottom:0px">
+			#foreach($sugg in $subCategories)
+				<div class="o_sublevel sugg" style="margin-bottom:5px">
+				<div class="" style="height:40px;">
+				<a href="/olat/auth/RepositoryEntry/$sugg.getParentId()/CourseNode/$sugg.getResid()">
+					#if($sugg.newSugg().equals("new"))	
+						<div class="o_meta" style="border:none;border-bottom:3px solid green"><h4 class="o_title" style="user-select:none;word-break: break-all;font-size: 16px">$sugg.getName()</h4></div>
+						#else
+						<div class="o_meta" style="border:none;border-bottom:3px solid orangered"><h4 class="o_title" style="user-select:none;word-break: break-all;font-size: 16px">$sugg.getName()</h4></div>
+						#end
+					</a></div>
+				</div>
+			#end
+			<div class="o_sublevel" style="margin-bottom:5px">
+			<div class="" style="height:40px;">
+			<a onclick="nextSugg()">	
+					<div class="o_meta" style="border:none;border-bottom:3px solid orangered"><h4 style="cursor:pointer;user-select:none;font-size: 16px" class="o_title">Prossimo <i class="o_icon o_icon_start" style="color:orangered"></i></h4></div>
+				</a></div>
+			</div>
+		</div>
+	</div>
+		<div class="o_catalog container-fluid" id="div2" style="display:none">
+		<div class="o_sublevels row clearfix" style="margin-bottom:0px">
+			#foreach($sugg in $subCategories)
+				<div class="o_sublevel" style="margin-bottom:5px">
+				<div class="" style="height:40px;">
+				<a href="/olat/auth/RepositoryEntry/$sugg.getParentId()/CourseNode/$sugg.getResid()">
+					#if($sugg.newSugg().equals("new"))	
+						<div class="o_meta" style="border:none;border-bottom:3px solid green"><h4 class="o_title" style="user-select:none;word-break: break-all;font-size: 16px">$sugg.getName()</h4></div>
+						#else
+						<div class="o_meta" style="border:none;border-bottom:3px solid orangered"><h4 class="o_title" style="user-select:none;word-break: break-all;font-size: 16px">$sugg.getName()</h4></div>
+						#end
+					</a></div>
+				</div>
+			#end
+		</div>
+	</div>
+</div>
+#end
+<script>
+var show_s = 0;
+var suggs = document.getElementsByClassName("sugg");
+var div1 = document.getElementById("div1");
+var div2 = document.getElementById("div2");
+
+for(var i=0;i<suggs.length;i++)
+	{
+		if (i == show_s) {
+			suggs[i].style.display="relative";
+			console.log(suggs[i]);
+		}
+		else suggs[i].style.display="none";
+	}
+
+function nextSugg()
+{
+	show_s++;
+	if(show_s == suggs.length) show_s =0;
+	for(var i=0;i<suggs.length;i++)
+	{
+		if (i == show_s) {
+			suggs[i].style.display="";
+			console.log(suggs[i]);
+		}
+		else suggs[i].style.display="none";
+	}
+}
+
+function changeMode(num)
+{
+	if (num == 1)
+		{
+			div1.style.display="";
+			div2.style.display="none";
+		}
+	else
+		{
+		div2.style.display="";
+		div1.style.display="none";
+		}
+}
+</script>
 $r.render("segments")
 <div class="o_segments_content clearfix">
 	$r.render("segmentCmp")

@@ -102,13 +102,14 @@
 	    <test.env.msgraph.app.secret></test.env.msgraph.app.secret>
 	    <test.env.msgraph.app.tenant></test.env.msgraph.app.tenant>
 	    <test.env.msgraph.teams.producer></test.env.msgraph.teams.producer>
+	    <test.env.msgraph.teams.onbehalf></test.env.msgraph.teams.onbehalf>
 	    <test.env.instance.id>myolat</test.env.instance.id>
 	    <test.env.webdriver.browser>chrome</test.env.webdriver.browser>
 	    <test.env.webdriver.firefox.version>v0.29.0</test.env.webdriver.firefox.version>
 	    <test.env.webdriver.chrome.version>88.0.4324.96</test.env.webdriver.chrome.version>
 	    <test.env.webdriver.chrome.arguments></test.env.webdriver.chrome.arguments>
 	    <skipTests>true</skipTests>
-		<skipSeleniumTests>false</skipSeleniumTests>
+		<skipSeleniumTests>true</skipSeleniumTests>
 	</properties>
 	<profiles>
 		<profile>
@@ -385,6 +386,16 @@
 				<activeByDefault>true</activeByDefault>
 			</activation>
 			<dependencies>
+				<dependency>
+			        <groupId>org.jpl7</groupId>
+			        <artifactId>jpl</artifactId>
+			        <version>1.0</version>
+			    </dependency>
+			    <dependency>
+			      <groupId>org.jsoup</groupId>
+				  <artifactId>jsoup</artifactId>
+				  <version>1.13.1</version>
+			   </dependency>
 				<dependency>
 					<groupId>org.slf4j</groupId>
 					<artifactId>slf4j-api</artifactId>
@@ -1526,6 +1537,7 @@
 						<test.env.msgraph.app.secret>${test.env.msgraph.app.secret}</test.env.msgraph.app.secret>
 						<test.env.msgraph.app.tenant>${test.env.msgraph.app.tenant}</test.env.msgraph.app.tenant>
 						<test.env.msgraph.teams.producer>${test.env.msgraph.teams.producer}</test.env.msgraph.teams.producer>
+						<test.env.msgraph.teams.onbehalf>${test.env.msgraph.teams.onbehalf}</test.env.msgraph.teams.onbehalf>
 						<arquillian.launch>tomcat-7-managed</arquillian.launch>
 						<webdriver.browser>${test.env.webdriver.browser}</webdriver.browser>
 						<webdriver.firefox.version>${test.env.webdriver.firefox.version}</webdriver.firefox.version>
@@ -2350,12 +2362,12 @@
 		<dependency>
 			<groupId>com.microsoft.graph</groupId>
 			<artifactId>microsoft-graph-beta</artifactId>
-			<version>0.4.0-SNAPSHOT</version>
+			<version>0.1.0-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.microsoft.azure</groupId>
 			<artifactId>msal4j</artifactId>
-			<version>1.9.0</version>
+			<version>1.8.1</version>
 			<exclusions>
 				<exclusion>
 					<groupId>com.sun.mail</groupId>

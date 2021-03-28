@@ -25,12 +25,16 @@
 
 package org.olat.course.run;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.Logger;
+import org.jpl7.Term;
 import org.olat.core.commons.fullWebApp.LayoutMain3ColsController;
 import org.olat.core.gui.UserRequest;
 import org.olat.core.gui.components.Component;
@@ -116,6 +120,10 @@ import org.olat.repository.RepositoryService;
 import org.olat.util.logging.activity.LoggingResourceable;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import ai.core.PrologEngine;
+import ai.core.Suggerimento;
+import ai.core.PrologQuery;
+
 /**
  * Description: <br>
  * 
@@ -160,6 +168,9 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 	private String courseTitle;
 	private Link nextLink, previousLink;
 	private GlossaryMarkupItemController glossaryMarkerCtr;
+	
+	private String lastId = "";
+	private boolean activated = true;
 
 	@Autowired
 	private RepositoryService repositoryService;
@@ -215,7 +226,7 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		if (paginationCtrl != null) {
 			listenTo(paginationCtrl);
 		}
-
+		
 		// build up the running structure for this user
 		// get all group memberships for this course
 		uce = loadUserCourseEnvironment(ureq, reSecurity);
@@ -234,7 +245,7 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		navHandler = new NavigationHandler(uce, visibilityFilter, false);
 
 		currentCourseNode = updateTreeAndContent(ureq, currentCourseNode, null);
-
+		
 		if (courseRepositoryEntry != null && courseRepositoryEntry.getEntryStatus() == RepositoryEntryStatusEnum.closed) {
 			wControl.setWarning(translate("course.closed"));
 		}
@@ -306,6 +317,7 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 			}
 			coursemain.contextPut("initNodeId", initNodeId);
 		}
+		
 		putInitialPanel(coursemain);
 
 		// disposed message controller must be created beforehand
@@ -319,7 +331,35 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		// - listen for CourseConfig events
 		CoordinatorManager.getInstance().getCoordinator().getEventBus().registerFor(this, identity, course);
 		// - group modification events
-		CoordinatorManager.getInstance().getCoordinator().getEventBus().registerFor(this, identity, courseRepositoryEntry);
+		CoordinatorManager.getInstance().getCoordinator().getEventBus().registerFor(this, identity, courseRepositoryEntry);		
+	}
+	
+	private List<Suggerimento> getSuggestions(String nodeId, UserRequest ureq) {
+		String current_lo = PrologQuery.getLONameFromId(nodeId);
+		String username =	ureq.getUserSession().getIdentity().getUser().getNickName();
+		
+		List<Suggerimento> subCategories = new ArrayList<>();
+		try {
+			Map<String, Term>[] map = PrologQuery.SuggestSimilarObjects(current_lo);
+			
+	        for (Map<String, Term> stringTermMap : map) {
+	        	String lo = PrologEngine.ToJavaString(stringTermMap.get("X").toString());
+	        	Suggerimento sg = new Suggerimento();
+	        	sg.setName(lo);
+	        	sg.setResid(PrologQuery.getLOId(lo));
+	        	String courseName = PrologQuery.getLOCourse(lo);
+	        	sg.setParentName(courseName);
+	        	sg.setParentId(PrologQuery.getCourseId(courseName));
+	        	sg.setNewSugg("new");
+	        	if(PrologQuery.visto(username,lo).equals("true")) sg.setNewSugg("repeat");
+	        	subCategories.add(sg);
+	        	}
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		return subCategories;
 	}
 	
 	public boolean isDisclaimerAccepted() {
@@ -421,8 +461,9 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 			String selNodeId = nclr.getSelectedNodeId();
 			luTree.setSelectedNodeId(selNodeId);
 			luTree.setOpenNodeIds(nclr.getOpenNodeIds());
-			newCurrentCourseNode = nclr.getCalledCourseNode();
+			newCurrentCourseNode = nclr.getCalledCourseNode();			
 		}
+		
 		return newCurrentCourseNode;
 	}
 	
@@ -509,9 +550,11 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 			Controller contentcontroller = ((TitledWrapperController)currentNodeController).getContentController();
 			addToHistory(ureq, contentcontroller);
 			if(contentcontroller instanceof Activateable2) {
+				System.out.println("attivo2");
 				((Activateable2)contentcontroller).activate(ureq, entries, state);
 			}
 		} else if(currentNodeController instanceof Activateable2) {
+			System.out.println("attivo3");
 			((Activateable2)currentNodeController).activate(ureq, entries, state);
 		}
 		if(currentNodeController != null) {
@@ -524,10 +567,11 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		}
 		
 		updateNextPrevious();
-		updateCourseDataAttributes(nclr.getCalledCourseNode());
+		updateCourseDataAttributes(nclr.getCalledCourseNode(), ureq);
 		updateAssessmentConfirmUI(nclr.getCalledCourseNode());
 		updateProgressUI();
 		updateLastUsage(nclr.getCalledCourseNode());
+		
 		return nclr.getCalledCourseNode();
 	}
 	
@@ -540,7 +584,8 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		}
 	}
 	
-	private void updateCourseDataAttributes(CourseNode calledCourseNode) {
+	private void updateCourseDataAttributes(CourseNode calledCourseNode, UserRequest ureq) {
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("try {var oocourse = jQuery('.o_course_run');");
 		if (calledCourseNode == null) {
@@ -548,13 +593,40 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		} else {
 			sb.append("oocourse.attr('data-nodeid','");
 			sb.append(Formatter.escapeDoubleQuotes(calledCourseNode.getIdent()));
-			sb.append("');");			
+			sb.append("');");	
 		}
 		sb.append("oocourse=null;}catch(e){}");
 		JSCommand jsc = new JSCommand(sb.toString());
 		WindowControl wControl = getWindowControl();
 		if (wControl != null && wControl.getWindowBackOffice() != null) {
-			wControl.getWindowBackOffice().sendCommandTo(jsc);			
+			wControl.getWindowBackOffice().sendCommandTo(jsc);	
+			
+			if(coursemain != null && lastId != calledCourseNode.getIdent())
+			{
+				if(!activated)
+				{
+					System.out.println("js");
+					lastId = calledCourseNode.getIdent();
+					List<Suggerimento> suggestions = getSuggestions(calledCourseNode.getIdent(), ureq);
+						
+					String s_obj = "obj  = {";
+					
+					for(Suggerimento sg:suggestions)
+					{
+						String color = "orangered";
+						if(sg.newSugg().equals("new")) color = "green";
+						
+						s_obj+=sg.getResid()+": {'parentId':"+sg.getParentId()+",'name':'"+sg.getName()+"','color':'"+color+"'},";
+					}
+					s_obj+="};";
+					
+					JSCommand changeSuggJS = new JSCommand(s_obj+"mode(current_mode);shows_s=0;console.log(obj);");
+					wControl.getWindowBackOffice().sendCommandTo(changeSuggJS);	
+				}
+				else activated = false;
+			}
+			
+			
 		}
 		// update window title, but only if a tree node is activated. Initial
 		// course title already set by BaseFullWebappController on tab activate
@@ -828,13 +900,15 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		// goto node:
 		// after a click in the tree, evaluate the model anew, and set the
 		// selection of the tree again
+		
 		NodeClickedRef nclr = navHandler.evaluateJumpToTreeNode(ureq, getWindowControl(), treeModel, tev, this, null, currentNodeController);
+		
 		if (!nclr.isVisible()) {
 			getWindowControl().setWarning(translate("msg.nodenotavailableanymore"));
 			// go to root since the current node is no more visible 
 			updateTreeAndContent(ureq, null, null);
 			updateNextPrevious();
-			updateCourseDataAttributes(nclr.getCalledCourseNode());
+			updateCourseDataAttributes(nclr.getCalledCourseNode(), ureq);
 			updateAssessmentConfirmUI(nclr.getCalledCourseNode());
 			return;
 		}
@@ -856,9 +930,9 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 				luTree.setOpenNodeIds(nclr.getOpenNodeIds());
 			}
 			updateNextPrevious();
-			updateCourseDataAttributes(nclr.getCalledCourseNode());
+			updateCourseDataAttributes(nclr.getCalledCourseNode(), ureq);
 			updateAssessmentConfirmUI(nclr.getCalledCourseNode());
-			updateProgressUI();
+			updateProgressUI();	
 			return;
 		}
 
@@ -899,7 +973,7 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 		}
 		
 		updateNextPrevious();
-		updateCourseDataAttributes(nclr.getCalledCourseNode());
+		updateCourseDataAttributes(nclr.getCalledCourseNode(), ureq);
 		updateAssessmentConfirmUI(nclr.getCalledCourseNode());
 		updateProgressUI();
 	}
@@ -1031,11 +1105,21 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 
 	@Override
 	public void activate(UserRequest ureq, List<ContextEntry> entries, StateEntry state) {
+		
 		if(entries == null || entries.isEmpty()) {
 			if(currentNodeController != null) {
 				addToHistory(ureq, currentNodeController);
 			} else {
 				addToHistory(ureq, this);
+			}
+			
+			System.out.println("activate-direct-init");
+			if(currentCourseNode != null)
+			{
+				System.out.println("activate-direct-init-notnull");
+				List<Suggerimento> suggestions = getSuggestions(currentCourseNode.getIdent(),ureq);
+				coursemain.contextPut("subCategories", suggestions);
+				activated=false;
 			}
 			return;
 		}
@@ -1056,8 +1140,20 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 				if(entries.size() > 1) {
 					entries = entries.subList(1, entries.size());
 				}
+				System.out.println("activate");
+				if(coursemain != null && cn != null)
+				{
+					activated = true;
+					List<Suggerimento> suggestions = getSuggestions(cn.getIdent(),ureq);
+					coursemain.contextPut("subCategories", suggestions);
+				}
+				else System.out.println("null");
 				currentCourseNode = updateTreeAndContent(ureq, cn, null, entries, firstEntry.getTransientState());
 			} else {
+				
+				System.out.println("direct-activate");
+				List<Suggerimento> suggestions = getSuggestions(currentCourseNode.getIdent(),ureq);
+				coursemain.contextPut("subCategories", suggestions);
 				// consume our entry
 				if(entries.size() > 1) {
 					entries = entries.subList(1, entries.size());
@@ -1065,6 +1161,7 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 				// the node to be activated is the one that is already on the screen
 				if (currentNodeController instanceof Activateable2) {
 					Activateable2 activateable = (Activateable2) currentNodeController;
+					System.out.println("attivo1");
 					activateable.activate(ureq, entries, state);
 				}
 			}

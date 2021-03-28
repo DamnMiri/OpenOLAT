@@ -60,6 +60,7 @@ How to add a new job:
             <ref bean="contactTracingTrigger"/>
             <ref bean="recordingSyncTrigger"/>
             <ref bean="documentAccessDeletionTrigger"/>
+			<ref bean="refreshPrologTrigger"/>
         </list>
     </property>
 </bean>
@@ -99,6 +100,15 @@ How to add a new job:
 	<bean id="org.olat.search.job.disabled" class="org.springframework.scheduling.quartz.JobDetailFactoryBean"  lazy-init="true">
 		<!-- NOTE: reusing the notifications.DummyJob here -->
 		<property name="jobClass" value="org.olat.core.commons.services.scheduler.DummyJob" />
+	</bean>
+
+	<bean id="refreshPrologTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+		<property name="jobDetail" ref="refreshPrologJob" />
+		<property name="cronExpression" value="0 0/1 * 1/1 * ? *" />
+	</bean>
+
+	<bean id="refreshPrologJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+	  <property name="jobClass" value="ai.core.RefreshPrologJob"/>
 	</bean>
 
 </beans>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.olat.course.Structure>
+  <rootNode class="org.olat.course.nodes.STCourseNode">
+    <ident>103242162573023</ident>
+    <children>
+      <org.olat.course.nodes.SPCourseNode>
+        <ident>103242162573028</ident>
+        <parent class="org.olat.course.nodes.STCourseNode" reference="../../.."/>
+        <type>sp</type>
+        <shortTitle>Information page</shortTitle>
+        <longTitle>Here you will find some information on this course.</longTitle>
+        <moduleConfiguration>
+          <config>
+            <entry>
+              <string>startpage</string>
+              <string>false</string>
+            </entry>
+            <entry>
+              <string>file</string>
+              <string>/information_page/information_page.html</string>
+            </entry>
+            <entry>
+              <string>allowRelativeLinks</string>
+              <string>false</string>
+            </entry>
+            <entry>
+              <string>deliveryOptions</string>
+              <org.olat.core.gui.control.generic.iframe.DeliveryOptions>
+                <standardMode>false</standardMode>
+                <jQueryEnabled>true</jQueryEnabled>
+                <glossaryEnabled>true</glossaryEnabled>
+                <openolatCss>true</openolatCss>
+              </org.olat.core.gui.control.generic.iframe.DeliveryOptions>
+            </entry>
+            <entry>
+              <string>configversion</string>
+              <int>4</int>
+            </entry>
+          </config>
+        </moduleConfiguration>
+        <additionalConditions/>
+      </org.olat.course.nodes.SPCourseNode>
+      <org.olat.course.nodes.ENCourseNode>
+        <ident>103242162573030</ident>
+        <parent class="org.olat.course.nodes.STCourseNode" reference="../../.."/>
+        <type>en</type>
+        <shortTitle>Enrollment</shortTitle>
+        <longTitle>Please enroll here in your course.</longTitle>
+        <moduleConfiguration>
+          <config>
+            <entry>
+              <string>groupkeys</string>
+              <list>
+                <long>1081344</long>
+              </list>
+            </entry>
+            <entry>
+              <string>cancel_enroll_enabled</string>
+              <boolean>true</boolean>
+            </entry>
+          </config>
+        </moduleConfiguration>
+        <additionalConditions/>
+      </org.olat.course.nodes.ENCourseNode>
+    </children>
+    <type>st</type>
+    <shortTitle>TEST LP</shortTitle>
+    <longTitle>TEST LP</longTitle>
+    <learningObjectives></learningObjectives>
+    <moduleConfiguration>
+      <config>
+        <entry>
+          <string>columns</string>
+          <int>2</int>
+        </entry>
+        <entry>
+          <string>display</string>
+          <string>delegate</string>
+        </entry>
+        <entry>
+          <string>score.key</string>
+          <string>score.sum</string>
+        </entry>
+        <entry>
+          <string>passed.progress</string>
+          <string>true</string>
+        </entry>
+        <entry>
+          <string>score.calculator.supported</string>
+          <string>false</string>
+        </entry>
+        <entry>
+          <string>allowRelativeLinks</string>
+          <string>false</string>
+        </entry>
+        <entry>
+          <string>deliveryOptions</string>
+          <org.olat.core.gui.control.generic.iframe.DeliveryOptions>
+            <standardMode>false</standardMode>
+            <jQueryEnabled>true</jQueryEnabled>
+            <glossaryEnabled>true</glossaryEnabled>
+            <openolatCss>true</openolatCss>
+          </org.olat.core.gui.control.generic.iframe.DeliveryOptions>
+        </entry>
+        <entry>
+          <string>configversion</string>
+          <int>5</int>
+        </entry>
+        <entry>
+          <string>learning.path.sequence</string>
+          <string>learning.path.sequence.sequential</string>
+        </entry>
+      </config>
+    </moduleConfiguration>
+    <additionalConditions/>
+    <scoreCalculator>
+      <expertMode>false</expertMode>
+      <passedCutValue>0</passedCutValue>
+      <failedType>failedAsNotPassedAfterEndDate</failedType>
+    </scoreCalculator>
+  </rootNode>
+  <version>3</version>
+</org.olat.course.Structure>

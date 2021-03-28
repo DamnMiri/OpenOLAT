@@ -55,7 +55,6 @@ import org.olat.core.util.WorkThreadInformations;
 import org.olat.core.util.event.FrameworkStartupEventChannel;
 import org.olat.core.util.i18n.I18nManager;
 
-
 @MultipartConfig(fileSizeThreshold=10240)
 public class OpenOLATServlet extends HttpServlet {
 
@@ -82,6 +81,7 @@ public class OpenOLATServlet extends HttpServlet {
 		super.init(servletConfig);
 
 		//the servlet.init method gets called after the spring stuff and all the stuff in web.xml is done
+		
 		log.info("Framework has started, sending event to listeners of FrameworkStartupEventChannel");
 		FrameworkStartupEventChannel.fireEvent();
 		log.info("FrameworkStartupEvent processed by alle listeners. Webapp has started.");

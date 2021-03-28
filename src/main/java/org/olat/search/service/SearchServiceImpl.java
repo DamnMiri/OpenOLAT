@@ -261,6 +261,13 @@ public class SearchServiceImpl implements SearchService, GenericEventListener {
 			}
 		}
 		log.info("init DONE");
+		
+		try {
+			final JobKey jk = new JobKey("refreshPrologJob", Scheduler.DEFAULT_GROUP);
+			scheduler.triggerJob(jk);
+		} catch (SchedulerException e) {
+			log.error("", e);
+		}
 	}
 	
 	@Override

@@ -35,7 +35,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import org.apache.logging.log4j.Logger;
 import org.olat.core.logging.StartupException;
 import org.olat.core.logging.Tracing;
@@ -44,7 +43,7 @@ import org.olat.core.util.WebappHelper;
 import org.olat.core.util.xml.XStreamHelper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
+import ai.core.DBScraper;
 
 /**
  * 
@@ -190,6 +189,10 @@ public class DatabaseUpgradeManager extends UpgradeManagerImpl {
 					}
 				}
 			}
+			
+			log.info("SET DataSource");
+			DBScraper.setDataSource(getDataSource());
+			
 		} catch (SQLException e) {
 			log.error("Could not upgrade your database! Please do it manually and add ", e);
 			throw new StartupException("Could not execute alter db statements. Please do it manually.", e);

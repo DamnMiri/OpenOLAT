@@ -107,10 +107,6 @@ Account studente : "test2" - "test".
 
 #### Problemi
 
-PrologException: existence_error
-
-Warning: [Thread 2] The predicates below are not defined.
-
 * Il server potrebbe dare problemi di Timezone, basta settarne una qualsiasi.
 
 	```sql
@@ -124,3 +120,7 @@ Warning: [Thread 2] The predicates below are not defined.
 * Se Tomcat si avvia ma non trova OpenOlat il server partirà molto velocemente senza dare errori, ma ovviamente l'applicazione non sarà partita: Tasto destro sul server e cliccare "Publish".
 
 * Se compaiono problemi a Runtime di "ClassNotFoundException": Fare il "Clean" sul progetto e sul server e rieffettuare la fase di build di tutti il progetto, riavviare tutto il progetto.
+
+* Warning: The predicates below are not defined: Il file prolog fatti.pl non è stato generato correttamente oppure il database è ancora vuoto (non ci sono corsi e interazioni degli utenti con i corsi).
+
+* PrologException: existence_error: Copiare i file prolog .pl dalla cartella prolog alla cartella openData creata sul server dopo il primo avvio oppure il database è ancora vuoto (non ci sono corsi e interazioni degli utenti con i corsi). 

@@ -48,7 +48,7 @@ mysql -u openolat -p openolat < src/main/resources/database/mysql/setupDatabase.
 Tasto destro sul progetto Eclipse -> Run As -> "Run on Server".
 Creare un nuovo server Tomcat 9.0.
 
-Modificare le impostazioni del server appena craeto aumentando i due timeout a 300s e 45s, nelle configurazioni di lancio aggiungendo alla voce Arguments aggiungere:
+Modificare le impostazioni del server appena craeto aumentando i due timeout a 300s e 30s, nelle configurazioni di lancio aggiungendo alla voce Arguments aggiungere:
 
 ```
 -XX:+UseG1GC -XX:+UseStringDeduplication -Xms256m -Xmx1024m -Djava.awt.headless=true
@@ -95,7 +95,7 @@ Modificare i file server generati:
 #### 4. Run
 Ora il server dovrebbe partire sull'indirizzo [http://localhost:8080/olat](http://localhost:8080/olat).
 
-Account amministratore : "administrator" - "test".
+Account amministratore : "administrator" - "openolat".
 
 Account docente : "author" - "test".
 
@@ -106,6 +106,10 @@ Account studente : "test1" - "test".
 Account studente : "test2" - "test".
 
 #### Problemi
+
+PrologException: existence_error
+
+Warning: [Thread 2] The predicates below are not defined.
 
 * Il server potrebbe dare problemi di Timezone, basta settarne una qualsiasi.
 

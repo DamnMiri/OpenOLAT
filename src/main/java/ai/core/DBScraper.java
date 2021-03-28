@@ -52,7 +52,7 @@ public class DBScraper {
 	
 	private static void ScrapeCourses() throws SQLException, IOException
 	{
-		ResultSet rs = statement.executeQuery("SELECT tb2.name AS nome_corso,tb1.name AS tag_corso,tb2.fk_repoentry as repoentry FROM o_catentry AS tb1 join o_catentry AS tb2 ON tb1.id = tb2.parent_id AND tb2.`type` = 1");
+		ResultSet rs = statement.executeQuery("SELECT tb2.name AS nome_corso,tb1.name AS tag_corso,tb2.fk_repoentry as repoentry FROM o_catentry AS tb1 join o_catentry AS tb2 ON tb1.id = tb2.parent_id AND tb2.type = 1");
 	      while (rs.next()) {
 	          String nome_corso = addQuotes(rs.getString("nome_corso"));
 	          PrologEngine.generaInserisci("course", new String[] {nome_corso});
@@ -148,7 +148,7 @@ public class DBScraper {
 
 	private static void ScrapeVisto() throws SQLException, IOException
 	{
-		ResultSet rs = statement.executeQuery("SELECT a_status,a_fully_assessed,a_completion,a_obligation,a_num_visits,fk_entry,a_subident,a_entry_root,authusername,displayname,resid FROM o_as_entry JOIN o_bs_authentication ON fk_identity = identity_fk JOIN o_repositoryentry ON fk_entry = repositoryentry_id JOIN o_olatresource ON fk_olatresource = resource_id WHERE provider = 'OLAT' AND a_entry_root = 0 AND a_fully_assessed = 1");
+		ResultSet rs = statement.executeQuery("SELECT a_status,a_fully_assessed,a_completion,a_obligation,a_num_visits,fk_entry,a_subident,a_entry_root,authusername,displayname,resid FROM o_as_entry JOIN o_bs_authentication ON fk_identity = identity_fk JOIN o_repositoryentry ON fk_entry = repositoryentry_id JOIN o_olatresource ON fk_olatresource = resource_id WHERE provider = 'OLAT' AND a_entry_root = '0' AND a_fully_assessed = '1'");
 	    while (rs.next()) {
 	        String authusername = addQuotes(rs.getString("authusername"));
 	        String a_subident = rs.getString("a_subident").toLowerCase().replace(" ", "_");

@@ -9,7 +9,7 @@ Il contenuto della cartella OpenOLAT è la repository che bisogna importare dent
 Se le variabili M2_REPO mancano in Eclipse eseguire i comandi Maven:
 
 ```bash
-mvn -Declipse.workspace=<percorso eclipse workspace> eclipse:configure-workspace
+mvn -Declipse.workspace=<percorso workspace eclipse> eclipse:configure-workspace
 
 mvn eclipse:clean eclipse:eclipse
 ```

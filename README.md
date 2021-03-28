@@ -109,9 +109,9 @@ Account studente : "test2" - "test".
 
 * Il server potrebbe dare problemi di Timezone, basta settarne una qualsiasi.
 
-```sql
-SET GLOBAL time_zone = 'Europe/Zurich';
-```
+	```sql
+	SET GLOBAL time_zone = 'Europe/Zurich';
+	```
 
 * OutOfMemoryException: Controllare di aver inserito i valori nel campo Arguments del server Run > Run Configurations > Arguments > VM Arguments: `-XX:+UseG1GC -XX:+UseStringDeduplication -Xms256m -Xmx1024m -Djava.awt.headless=true`
 

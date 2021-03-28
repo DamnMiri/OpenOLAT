@@ -11,7 +11,6 @@ Se le variabili M2_REPO mancano in Eclipse eseguire i comandi Maven:
 ```bash
 mvn -Declipse.workspace=<percorso eclipse workspace> eclipse:configure-workspace
 
-bash
 mvn eclipse:clean eclipse:eclipse
 ```
 
@@ -62,35 +61,38 @@ Modificare i file server generati:
 ```
 
 * server.xml: Elemento Context settare il parametro reloadable="false" 
-Elementi Connector settare il parametro URIEncoding="UTF-8"
 
-Aggiungere uno dei seguenti Elementi Resource, in base al database in utilizzo, nell'elemento GlobalNamingResources.
-Modificare in base ai parametri username password e nome db scelti.
 
-*For MySQL:*
+	Elementi Connector settare il parametro URIEncoding="UTF-8"
 
-```xml
-<Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" type="javax.sql.DataSource"
+	Aggiungere uno dei seguenti Elementi Resource, in base al database in utilizzo, nell'elemento GlobalNamingResources.
+	Modificare in base ai parametri username password e nome db scelti.
+
+	*For MySQL:*
+
+	```xml
+	<Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" type="javax.sql.DataSource"
           maxIdle="4" maxTotal="16" maxWaitMillis="10000"
           name="jdbc/OpenOLATDS"
           password="openolat" username="openolat"
           url="jdbc:mysql://localhost:3306/openolat?useUnicode=true&amp;characterEncoding=UTF-8&amp;cachePrepStmts=true&amp;cacheCallableStmts=true&amp;autoReconnectForPools=true"
           testOnBorrow="true" testOnReturn="false"
           validationQuery="SELECT 1" validationQueryTimeout="-1"/>
-```
+	```
 
-*For PostreSQL:*
+	*For PostreSQL:*
 
-```xml
-<Resource auth="Container" driverClassName="org.postgresql.Driver" type="javax.sql.DataSource"
+	```xml
+	<Resource auth="Container" driverClassName="org.postgresql.Driver" type="javax.sql.DataSource"
           maxIdle="4" maxTotal="16" maxWaitMillis="-1"
           name="jdbc/OpenOLATPostgresDS"
           username="postgres" password="postgres"
           url="jdbc:postgresql://localhost:5432/olat"
           testOnBorrow="true" testOnReturn="false"
           validationQuery="SELECT 1" validationQueryTimeout="-1"/>
-```
+	```
 
+#### 4. Run
 Ora il server dovrebbe partire sull'indirizzo [http://localhost:8080/olat](http://localhost:8080/olat).
 
 Account amministratore : "administrator" - "test".

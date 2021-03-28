@@ -68,7 +68,7 @@ Modificare i file server generati:
 	Aggiungere uno dei seguenti Elementi Resource, in base al database in utilizzo, nell'elemento GlobalNamingResources.
 	Modificare in base ai parametri username password e nome db scelti.
 
-	*For MySQL:*
+	*MySQL:*
 
 	```xml
 	<Resource auth="Container" driverClassName="com.mysql.cj.jdbc.Driver" type="javax.sql.DataSource"
@@ -80,7 +80,7 @@ Modificare i file server generati:
           validationQuery="SELECT 1" validationQueryTimeout="-1"/>
 	```
 
-	*For PostreSQL:*
+	*PostreSQL:*
 
 	```xml
 	<Resource auth="Container" driverClassName="org.postgresql.Driver" type="javax.sql.DataSource"
@@ -96,9 +96,13 @@ Modificare i file server generati:
 Ora il server dovrebbe partire sull'indirizzo [http://localhost:8080/olat](http://localhost:8080/olat).
 
 Account amministratore : "administrator" - "test".
+
 Account docente : "author" - "test".
+
 Account studente : "test" - "test".
+
 Account studente : "test1" - "test".
+
 Account studente : "test2" - "test".
 
 #### Problemi

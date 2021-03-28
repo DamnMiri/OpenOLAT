@@ -358,7 +358,9 @@ public class RunMainController extends MainLayoutBasicController implements Gene
 				e.printStackTrace();
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
+			} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return subCategories;
 	}
 	

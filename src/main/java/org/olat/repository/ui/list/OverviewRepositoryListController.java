@@ -143,12 +143,12 @@ public class OverviewRepositoryListController extends BasicController implements
 		mainVC = createVelocityContainer("overview");
 		int numero_minimo_suggerimenti = 5;
 		String username =	ureq.getUserSession().getIdentity().getUser().getNickName();
+		List<Suggerimento> subCategories = new ArrayList<>();
 		
 		try {
 		System.out.println("Suggest Init");
 		Map<String, Term>[] map = PrologQuery.SuggestMostVisited(username);
 
-		List<Suggerimento> subCategories = new ArrayList<>();
         for (Map<String, Term> stringTermMap : map) {
         	String lo = PrologEngine.ToJavaString(stringTermMap.get("X").toString());
         	Suggerimento sg = new Suggerimento();
@@ -182,14 +182,16 @@ public class OverviewRepositoryListController extends BasicController implements
 	    	}
 		}
 		
-		mainVC.contextPut("subCategories", subCategories);
-		mainPanel.setContent(mainVC);
-		
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+		
+		mainVC.contextPut("subCategories", subCategories);
+		mainPanel.setContent(mainVC);
 		
 		segmentView = SegmentViewFactory.createSegmentView("segments", mainVC, this);
 		segmentView.setReselect(true);

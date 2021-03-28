@@ -48,7 +48,7 @@ mysql -u openolat -p openolat < src/main/resources/database/mysql/setupDatabase.
 Tasto destro sul progetto Eclipse -> Run As -> "Run on Server".
 Creare un nuovo server Tomcat 9.0.
 
-Modificare le impostazioni del server appena craeto aumentando i due timeout a 300s e 45s, nelle configurazioni di lancio aggiungendo alla voce Arguments aggiungere:
+Modificare le impostazioni del server appena craeto aumentando i due timeout a 300s e 30s, nelle configurazioni di lancio aggiungendo alla voce Arguments aggiungere:
 
 ```
 -XX:+UseG1GC -XX:+UseStringDeduplication -Xms256m -Xmx1024m -Djava.awt.headless=true

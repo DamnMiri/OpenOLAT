@@ -42,6 +42,7 @@ FLUSH PRIVILEGES;
 ```
  
 Caricare lo schema del DB base oppure solo per MySQL già popolato.
+
 Se si utilizza lo schema base del DB la cartella openData verrà creata al primo avvio del software, invece nel caso del database già popolato sarà necessario copiare la cartella openData presente in questo progetto perchè contiere i file fisici a cui il database fa riferimento.
 
 * Mysql

@@ -22,7 +22,7 @@ mvn eclipse:clean eclipse:eclipse
 Fare il Refresh del progetto su Eclipse. 
 
 Modificare il file `olat.local.properties` con i parametri relativi al vostro progetto. E' possibile esplorare il fire
-`olat.local.properties.sample` per vedere gli altri parametri configurabili.
+`olat.list.properties` per vedere gli altri parametri configurabili.
 
 
 Nel progetto eclipse trovare i link `src/main/java/olat.local.properties` e `src/test/java/olat.local.properties` e collegarli al file `olat.local.properties` personalizzato in precedenza.
@@ -43,7 +43,7 @@ FLUSH PRIVILEGES;
  
 Caricare lo schema del DB base oppure solo per MySQL già popolato.
 
-Se si utilizza lo schema base del DB la cartella openData verrà creata al primo avvio del software, invece nel caso del database già popolato sarà necessario copiare la cartella openData presente in questo progetto perchè contiere i file fisici a cui il database fa riferimento.
+Se si utilizza lo schema base del DB la cartella openData verrà creata al primo avvio del software, invece nel caso del database già popolato sarà necessario copiare la cartella openData presente in questo progetto perché contiene i file fisici a cui il database fa riferimento.
 
 * Mysql
 
@@ -56,7 +56,7 @@ Se si utilizza lo schema base del DB la cartella openData verrà creata al primo
 	psql -U openolat -d openolat < src/main/resources/database/postgres/setupDatabase.sql
 	```
 
-Lo schema MySQL già popolato si trova nella cartella dbDump, l'utilizzo di tale file obbliga l'utilizzo della cartella openData condivisa in questo progetto poichè contiene i file fisici a cui il database fa riferimento.
+Lo schema MySQL già popolato si trova nella cartella dbDump (ricordarsi di utilizzare la cartella openData del progetto).
 * Mysql
 
 	```bash

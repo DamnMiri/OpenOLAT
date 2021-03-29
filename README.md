@@ -6,6 +6,11 @@
 
 Il contenuto della cartella OpenOLAT è la repository che bisogna importare dentro Eclipse.
 
+Importare la libreria jpl.jar presente nella cartella prolog nella repository locale di Maven
+```bash
+mvn install:install-file -Dfile=<percorso libreria jpl.jar> -DgroupId=org.jpl7 -DartifactId=jpl -Dversion=1.0 -Dpackaging=jar -DgeneratePom=true
+```
+
 Se le variabili M2_REPO mancano in Eclipse eseguire i comandi Maven:
 
 ```bash
@@ -36,12 +41,25 @@ UPDATE mysql.user SET HOST='localhost' WHERE USER='openolat' AND HOST='%';
 FLUSH PRIVILEGES;
 ```
  
-Creare lo schema del DB. MySQL:
+Caricare lo schema del DB base oppure solo per MySQL già popolato.
 
-```bash
-mysql -u openolat -p openolat < src/main/resources/database/mysql/setupDatabase.sql
-```
+* Mysql
 
+	```bash
+	mysql -u openolat -p openolat < src/main/resources/database/mysql/setupDatabase.sql
+	```
+* Postgres
+
+	```bash
+	psql -U openolat -d openolat < src/main/resources/database/postgres/setupDatabase.sql
+	```
+
+Lo schema MySQL già popolato si trova nella cartella dbDump.
+* Mysql
+
+	```bash
+	mysql -u openolat -p openolat < dbDump/openolatdb.sql
+	```
 
 #### 3. Tomcat server in Eclipse
 
